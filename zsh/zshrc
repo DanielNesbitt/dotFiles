@@ -1,0 +1,58 @@
+# Path to your oh-my-zsh configuration.
+ZSH=$HOME/.oh-my-zsh
+
+# Set name of the theme to load.
+# Look in ~/.oh-my-zsh/themes/
+ZSH_THEME="fishy"
+
+# Set to this to use case-sensitive completion
+CASE_SENSITIVE="false"
+
+# Adds red dots to be displayed while waiting for completion
+COMPLETION_WAITING_DOTS="true"
+
+# Oh-my-zsh plugins to be loaded
+plugins=(git brew osx heroku)
+
+source $ZSH/oh-my-zsh.sh
+
+# Export a path that is appropriate for homebrew
+export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/X11/bin
+
+# Alias for using Sublime from the terminal
+alias subl='nocorrect subl -w'
+
+# RVM
+if [ -s $HOME/.rvm/scripts/rvm ]; then
+	source ~/.rvm/scripts/rvm
+	export PATH=$PATH:$HOME/.rvm/bin
+fi
+
+#===== Installed apps from brew
+installedapps=$(brew list)
+
+# Play framework
+if [ ! -z $(echo $installedapps | grep -o play) ]; then
+	export PLAY=$(brew --prefix play)
+fi
+
+# Scala
+if [ ! -z $(echo $installedapps | grep -o scala) ]; then
+	export SCALA_HOME=$(brew --prefix scala)
+fi
+
+# Node
+if [ ! -z $(echo $installedapps | grep -o node) ]; then
+	export NODE=$(brew --prefix node)
+fi
+
+unset installedapps
+
+
+# A .profile file can be used to override with machine specific settings
+if [ -e .profile ];then
+	source .profile
+fi
+
+
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
