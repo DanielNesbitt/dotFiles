@@ -1,3 +1,3 @@
 #!/bin/zsh
 
-ln -s $HOME/.dotFiles/zsh/zshrc $HOME/.zshrc
+ln -s $1/zsh/zshrc $HOME/.zshrc
