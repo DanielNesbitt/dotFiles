@@ -1,3 +1,6 @@
 #!/bin/zsh
 
-source $HOME/.dotFiles/zsh/install.sh
+# Find out where we're running from
+DIR=`dirname $0`
+
+source $DIR/zsh/install.sh
