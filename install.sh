@@ -4,6 +4,7 @@
 DIR=`dirname $0`
 
 # Install zsh
+ln -s $DIR/zsh/oh-my-zsh $HOME/.oh-my-zsh
 ln -s $DIR/zsh/zshrc $HOME/.zshrc
 
 # Install Sublime 2 user settings

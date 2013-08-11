@@ -1,3 +1,6 @@
 [submodule "sublime2"]
 	path = sublime2
 	url = git@github.com:DanielNesbitt/Sublime-2-User-Settings.git
+[submodule "zsh/oh-my-zsh"]
+	path = zsh/oh-my-zsh
+	url = https://github.com/robbyrussell/oh-my-zsh.git
