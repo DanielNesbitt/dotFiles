@@ -4,7 +4,7 @@
 DIR=`dirname $0`
 
 # Install zsh
-source $DIR/zsh/install.sh $DIR
+ln -s $DIR/zsh/zshrc $HOME/.zshrc
 
 # Install Sublime 2 user settings
 if [[ $OSTYPE == darwin* ]]; then
