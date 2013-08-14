@@ -8,6 +8,9 @@ ZSH_THEME="fishy"
 # Set to this to use case-sensitive completion
 CASE_SENSITIVE="false"
 
+# Disable auto-updates
+DISABLE_AUTO_UPDATE=true
+
 # Adds red dots to be displayed while waiting for completion
 COMPLETION_WAITING_DOTS="true"
 
