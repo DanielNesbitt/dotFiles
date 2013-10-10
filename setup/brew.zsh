@@ -11,17 +11,10 @@ brew update
 # Upgrade any already-installed formulae
 brew upgrade
 
-
-function install() {
-	if [ ! -e "$(brew --prefix ${@} 2>/dev/null)"]; then
-		brew install "${@}"
-	fi
-}
-
-install scala
-install sbt
-install play
-install node
+brew install scala
+brew install sbt
+brew install play
+brew install node
 
 # Remove outdate versions from the cellar
 brew cleanup
