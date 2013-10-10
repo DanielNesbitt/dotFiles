@@ -51,6 +51,10 @@ fi
 
 unset installedapps
 
+# Setup zsh keybindings to work with iTerm2
+bindkey -e
+bindkey '^[[1;9C' forward-word
+bindkey '^[[1;9D' backward-word
 
 # A .profile file can be used to override with machine specific settings
 if [ -e .profile ];then
