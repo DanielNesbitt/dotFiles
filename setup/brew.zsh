@@ -11,7 +11,7 @@ brew update
 # Upgrade any already-installed formulae
 brew upgrade
 
-brew install scala
+brew install scala --with-docs
 brew install sbt
 brew install play
 brew install node
