@@ -61,5 +61,8 @@ if [ -e .profile ];then
 	source .profile
 fi
 
+# Add RVM to PATH for scripting
+PATH=$PATH:$HOME/.rvm/bin 
 
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+# Add TeXLive to the PATH
+PATH=$PATH:/usr/local/texlive/2013/bin/x86_64-darwin 
