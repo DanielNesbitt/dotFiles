@@ -25,6 +25,9 @@ export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/X11/bin
 # Alias for using Sublime from the terminal
 alias subl='nocorrect subl -w'
 
+# Java
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_05.jdk/Contents/Home
+
 # RVM
 if [ -s $HOME/.rvm/scripts/rvm ]; then
 	source ~/.rvm/scripts/rvm
@@ -33,11 +36,6 @@ fi
 
 #===== Installed apps from brew
 installedapps=$(brew list)
-
-# Play framework
-if [ ! -z $(echo $installedapps | grep -o play) ]; then
-	export PLAY=$(brew --prefix play)
-fi
 
 # Scala
 if [ ! -z $(echo $installedapps | grep -o scala) ]; then
