@@ -1,0 +1,10 @@
+packages:
+  pacman:
+    - which
+    - git
+    - atuin
+    - starship
+    - fish
+    - eza
+    - xdg-utils
+
