@@ -1,6 +1,9 @@
 packages:
   pacman:
     - which
+    - openssh
+    - man
+    - less
     - git
     - atuin
     - starship

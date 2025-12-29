@@ -7,4 +7,9 @@ if status is-interactive
     if command -v atuin > /dev/null
         atuin init fish --disable-up-arrow | source
 	end
+
+    # Starship initialization
+    if command -v starship > /dev/null
+        starship init fish | source
+    end
 end
