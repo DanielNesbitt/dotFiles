@@ -1,5 +1,7 @@
 packages:
   pacman:
+    - sudo
+    - vim
     - which
     - openssh
     - man
