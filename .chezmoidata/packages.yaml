@@ -12,4 +12,5 @@ packages:
     - fish
     - eza
     - xdg-utils
+    - rustup
 

@@ -12,4 +12,6 @@ if status is-interactive
     if command -v starship > /dev/null
         starship init fish | source
     end
+
+    alias pkgedit='vim ~/.local/share/chezmoi/.chezmoidata/packages.yaml'
 end
