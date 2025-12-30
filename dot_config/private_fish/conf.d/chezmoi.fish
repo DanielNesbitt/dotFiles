@@ -7,9 +7,10 @@ function czpush --description "Commit and push chezmoi changes"
     if test -z "$msg"
         set msg "Update chezmoi config"
     end
-    chezmoi git add -A
-    and chezmoi git commit -- -m "$msg"
-    and chezmoi git push
+    set -l src (chezmoi source-path)
+    git -C $src add .
+    and git -C $src commit -m "$msg"
+    and git -C $src push
 end
 
 function czpkg --description "Edit chezmoi packages file"

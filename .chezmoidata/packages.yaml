@@ -16,6 +16,7 @@ packages:
     - rustup
     - jq
     - nodejs-lts-jod
+    - npm
     - podman
     - tree
     - sqlite
