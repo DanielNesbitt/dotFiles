@@ -17,3 +17,5 @@ packages:
     - jq
     - nodejs-lts-jod
     - podman
+    - tree
+    - sqlite
