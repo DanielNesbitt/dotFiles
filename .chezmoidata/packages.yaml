@@ -16,3 +16,4 @@ packages:
     - rustup
     - jq
     - nodejs-lts-jod
+    - podman
