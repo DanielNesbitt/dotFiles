@@ -13,8 +13,6 @@ if status is-interactive
         starship init fish | source
     end
 
-    alias pkgedit='vim ~/.local/share/chezmoi/.chezmoidata/packages.yaml'
-
     if test -d $HOME/.cargo/bin
         set -gx PATH $HOME/.cargo/bin $PATH
     end
