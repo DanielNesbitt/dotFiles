@@ -1,0 +1,8 @@
+shell:
+  paths:
+    - /usr/local/bin
+    - "{{ .chezmoi.homeDir }}/.local/bin"
+    - "{{ .chezmoi.homeDir }}/.cargo/bin"
+    - "{{ .chezmoi.homeDir }}/go/bin"
+  envVars:
+    EDITOR: vim

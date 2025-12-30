@@ -12,12 +12,4 @@ if status is-interactive
     if command -v starship > /dev/null
         starship init fish | source
     end
-
-    if test -d $HOME/.cargo/bin
-        set -gx PATH $HOME/.cargo/bin $PATH
-    end
-
-    if test -d $HOME/.local/bin
-        set -gx PATH $HOME/.local/bin $PATH
-    end
 end

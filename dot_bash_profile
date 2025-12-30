@@ -1,0 +1,6 @@
+#
+# ~/.bash_profile
+#
+
+[[ -f ~/.bashrc ]] && . ~/.bashrc
+[ -f ~/.config/shell-env.sh ] && . ~/.config/shell-env.sh
