@@ -2,6 +2,10 @@ function cza --description "Apply chezmoi changes"
     chezmoi apply $argv
 end
 
+function czstat --description "Checks the chezmoi status"
+    chezmoi status $argv
+end
+
 function czpush --description "Commit and push chezmoi changes"
     set -l msg $argv[1]
     if test -z "$msg"
