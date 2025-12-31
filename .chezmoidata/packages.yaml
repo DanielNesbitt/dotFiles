@@ -18,5 +18,6 @@ packages:
     - nodejs-lts-jod
     - npm
     - podman
+    - podman-compose
     - tree
     - sqlite
