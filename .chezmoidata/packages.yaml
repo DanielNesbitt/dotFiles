@@ -21,3 +21,4 @@ packages:
     - podman-compose
     - tree
     - sqlite
+    - ripgrep
