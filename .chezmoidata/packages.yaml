@@ -22,3 +22,5 @@ packages:
     - tree
     - sqlite
     - ripgrep
+    - postgresql
+    - go
