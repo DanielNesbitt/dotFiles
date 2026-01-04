@@ -26,3 +26,4 @@ packages:
     - go
     - neovim
     - zellij
+    - just
