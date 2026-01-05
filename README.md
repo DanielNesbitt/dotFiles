@@ -23,14 +23,18 @@ echo "%wheel ALL=(ALL:ALL) ALL" > /etc/sudoers.d/wheel
 chmod 440 /etc/sudoers.d/wheel
 
 # Update pacman
-pacman -Syu
+pacman -Syu 
+
+# Install bootstrap dependencies
+pacman -S chezmoi git openssh
 exit
 ```
 - [ ] Set the default user.
 ```
 wsl --manage archlinux --set-default-user username
 ```
-- [ ] Setup chezmoi.
+- [ ] Setup chezmoi. (You may need to generate and add ssh keys.)
 ```sh
-sudo pacman -S chezmoi
+chezmoi init --verbose git@github.com:DanielNesbitt/dotFiles.git
 ```
+- [ ] Restart the session to change into the new shell
