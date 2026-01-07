@@ -3,7 +3,9 @@ if status is-interactive
 
     set -g fish_greeting
 
-	# Atuin initialization
+    set -gx EDITOR nvim
+
+    # Atuin initialization
     if command -v atuin > /dev/null
         atuin init fish --disable-up-arrow | source
 	end
