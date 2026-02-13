@@ -1,0 +1,16 @@
+{{ if eq .chezmoi.osRelease.id "arch" -}}
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Requires root
+if [ "$(id -u)" -ne 0 ]; then
+    exec sudo bash "$0" "$@"
+fi
+
+# Uncomment or add the locale line
+sed -i 's/^#\s*en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+grep -q '^en_US.UTF-8 UTF-8' /etc/locale.gen || echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen
+
+# Generate locales
+locale-gen
+{{ end -}}

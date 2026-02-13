@@ -2,5 +2,6 @@ shell:
   paths:
     - ~/.local/bin
     - ~/.cargo/bin
+    - ~/go/bin
   envVars:
     EDITOR: vim
