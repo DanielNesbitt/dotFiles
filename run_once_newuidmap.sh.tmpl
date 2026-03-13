@@ -1,0 +1,20 @@
+{{ if eq .chezmoi.osRelease.id "arch" -}}
+#!/bin/bash
+sudo mkdir -p /etc/pacman.d/hooks
+
+sudo tee /etc/pacman.d/hooks/newuidmap-caps.hook << 'EOF'
+[Trigger]
+Type = Package
+Operation = Install
+Operation = Upgrade
+Target = shadow
+
+[Action]
+Description = Restore newuidmap/newgidmap capabilities
+When = PostTransaction
+Exec = /bin/sh -c 'setcap cap_setuid+ep /usr/bin/newuidmap; setcap cap_setgid+ep /usr/bin/newgidmap'
+EOF
+
+sudo setcap cap_setuid+ep /usr/bin/newuidmap
+sudo setcap cap_setgid+ep /usr/bin/newgidmap
+{{ end -}}
