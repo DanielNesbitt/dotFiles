@@ -20,3 +20,7 @@ end
 function czpkg --description "Edit chezmoi packages file"
     vim ~/.local/share/chezmoi/.chezmoidata/packages.yaml
 end
+
+function czcd --description "Change to the chezmoi directory"
+    chezmoi cd
+end

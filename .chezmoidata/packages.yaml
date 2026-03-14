@@ -28,3 +28,6 @@ packages:
     - zellij
     - just
     - unzip
+    - wget
+    - mise
+    - expac
