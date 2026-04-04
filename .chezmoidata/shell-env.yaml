@@ -3,5 +3,6 @@ shell:
     - ~/.local/bin
     - ~/.cargo/bin
     - ~/go/bin
+    - /opt/homebrew/bin
   envVars:
     EDITOR: vim

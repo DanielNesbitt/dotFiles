@@ -1,4 +1,15 @@
 packages:
+  brew:
+    - git
+    - atuin
+    - starship
+    - fish
+    - eza
+    - jq
+    - wget
+    - tree
+    - ripgrep
+    - zellij
   pacman:
     - sudo
     - vim

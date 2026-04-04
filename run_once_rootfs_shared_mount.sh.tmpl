@@ -1,4 +1,4 @@
-{{ if eq .chezmoi.osRelease.id "arch" -}}
+{{ if eq (index .chezmoi.osRelease "id") "arch" -}}
 #!/bin/bash
 sudo tee /etc/systemd/system/rootfs-shared.service > /dev/null << 'UNIT'
 [Unit]

@@ -1,17 +1,22 @@
-{{ if eq (index .chezmoi.osRelease "id") "arch" -}}
+{{ if eq .chezmoi.os "darwin" -}}
 #!/bin/bash
 
 set -e
-export LC_ALL=C
+
+# Ensure Homebrew is installed
+if ! command -v brew >/dev/null 2>&1; then
+    echo "Installing Homebrew..."
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
 
 {{- $packages := list -}}
-{{- range .packages.pacman -}}
+{{- range .packages.brew -}}
 {{- $packages = append $packages . -}}
 {{- end -}}
 
 {{- if $packages }}
-echo "Installing pacman packages: {{ join " " $packages }}"
-sudo pacman -S --needed --noconfirm {{ join " " $packages }}
+echo "Installing brew packages: {{ join " " $packages }}"
+brew install {{ join " " $packages }}
 {{- end }}
 
 # Change shell to fish if installed
