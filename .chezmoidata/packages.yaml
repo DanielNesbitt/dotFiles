@@ -43,3 +43,5 @@ packages:
     - mise
     - expac
     - usage
+    - glab
+    - uv
