@@ -10,6 +10,7 @@ packages:
     - tree
     - ripgrep
     - zellij
+    - mise
   pacman:
     - sudo
     - vim

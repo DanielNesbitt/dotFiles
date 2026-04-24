@@ -14,4 +14,9 @@ if status is-interactive
     if command -v starship > /dev/null
         starship init fish | source
     end
+
+    # Mise initialization
+    #if command -v mise > /dev/null
+    #    mise activate fish | source
+    #end
 end

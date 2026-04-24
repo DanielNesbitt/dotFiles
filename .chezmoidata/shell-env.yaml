@@ -1,5 +1,6 @@
 shell:
   paths:
+    - ~/.local/share/mise/shims
     - ~/.local/bin
     - ~/.cargo/bin
     - ~/go/bin
