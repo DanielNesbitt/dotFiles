@@ -7,14 +7,19 @@ function czstat --description "Checks the chezmoi status"
 end
 
 function czpush --description "Commit and push chezmoi changes"
-    set -l msg $argv[1]
+    set -l msg "$argv"
+
     if test -z "$msg"
         set msg "Update chezmoi config"
     end
-    set -l src (chezmoi source-path)
-    git -C $src add .
-    and git -C $src commit -m "$msg"
-    and git -C $src push
+
+    chezmoi git add .
+    and chezmoi git commit -- -m "$msg"
+    and chezmoi git push
+end
+
+function czup --description "Pull and apply chezmoi updates"
+    chezmoi update
 end
 
 function czpkg --description "Edit chezmoi packages file"
