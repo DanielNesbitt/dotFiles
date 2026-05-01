@@ -45,7 +45,5 @@ packages:
     - usage
     - glab
     - uv
-    - paru
-    - paru-debug
     - dos2unix
     - slirp4netns
