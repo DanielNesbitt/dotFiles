@@ -16,7 +16,6 @@ packages:
     - vim
     - which
     - openssh
-    - man
     - less
     - git
     - atuin
@@ -46,3 +45,7 @@ packages:
     - usage
     - glab
     - uv
+    - paru
+    - paru-debug
+    - dos2unix
+    - slirp4netns
