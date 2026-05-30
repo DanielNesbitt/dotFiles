@@ -1,0 +1,3 @@
+#!/bin/bash
+launchctl bootstrap system /Library/LaunchDaemons/com.cloudflare.1dot1dot1dot1.macos.warp.daemon.plist
+open "/Applications/Cloudflare WARP.app"

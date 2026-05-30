@@ -1,0 +1,3 @@
+#!/bin/bash
+pkill -f "Cloudflare WARP" 2>/dev/null
+launchctl bootout system/com.cloudflare.1dot1dot1dot1.macos.warp.daemon 2>/dev/null
