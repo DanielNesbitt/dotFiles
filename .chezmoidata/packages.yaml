@@ -47,3 +47,4 @@ packages:
     - uv
     - dos2unix
     - slirp4netns
+    - bottom
