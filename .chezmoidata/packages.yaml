@@ -48,3 +48,4 @@ packages:
     - dos2unix
     - slirp4netns
     - bottom
+    - pass
