@@ -46,6 +46,5 @@ packages:
     - glab
     - uv
     - dos2unix
-    - slirp4netns
     - bottom
     - pass
