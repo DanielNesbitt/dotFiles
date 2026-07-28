@@ -15,6 +15,11 @@ if status is-interactive
         starship init fish | source
     end
 
+    # Zoxide initialization
+    if command -v zoxide > /dev/null
+	zoxide init fish | source
+    end
+
     # Mise initialization
     #if command -v mise > /dev/null
     #    mise activate fish | source

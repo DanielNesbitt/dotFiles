@@ -48,3 +48,4 @@ packages:
     - dos2unix
     - bottom
     - pass
+    - zoxide
