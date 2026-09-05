@@ -11,6 +11,7 @@ packages:
     - ripgrep
     - zellij
     - mise
+    - just
   pacman:
     - sudo
     - vim
