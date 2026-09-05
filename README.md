@@ -90,5 +90,5 @@ macOS only. Installs Homebrew if missing, installs the `brew` packages from `pac
 ### `run_onchange_arch-install-packages.sh.tmpl`
 Arch only. Installs the `pacman` packages from `packages.yaml` via `sudo pacman -S --needed`, and switches the login shell to fish if installed.
 
-### `run_onchange_arch-update-envs.sh.tmpl`
-Platform-independent despite the filename. Renders `shell-env.yaml`'s `paths` and `envVars` into `~/.config/fish/conf.d/chezmoi-env.fish` and `~/.config/shell-env.sh` (the latter sourced from `~/.bash_profile`).
+### `run_onchange_setup-shell-env.sh.tmpl`
+Platform-independent. Renders `shell-env.yaml`'s `paths` and `envVars` into `~/.config/fish/conf.d/chezmoi-env.fish` and `~/.config/shell-env.sh` (the latter sourced from `~/.bash_profile`), so bash — including agentic tools that spawn a bash shell — sees the same `PATH`/env vars as the fish login shell.
