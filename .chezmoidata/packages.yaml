@@ -19,20 +19,22 @@ packages:
     - openssh
     - less
     - git
+    - chezmoi
     - atuin
     - starship
     - fish
     - eza
     - xdg-utils
     - base-devel
+    - man-db
     - rustup
     - jq
     - nodejs-lts-jod
+    - opencode
     - npm
     - podman
     - podman-compose
     - tree
-    - sqlite
     - ripgrep
     - postgresql
     - go

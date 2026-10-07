@@ -1,7 +1,7 @@
 {{ if eq (index .chezmoi.osRelease "id") "arch" -}}
 #!/bin/bash
 
-set -e
+set -eo pipefail
 export LC_ALL=C
 
 {{- $packages := list -}}
@@ -10,8 +10,39 @@ export LC_ALL=C
 {{- end -}}
 
 {{- if $packages }}
-echo "Installing pacman packages: {{ join " " $packages }}"
-sudo pacman -S --needed --noconfirm {{ join " " $packages }}
+# Compare the manifest with installed packages before installing.
+declared_packages=(
+{{ range $packages }}
+  {{ printf "%q" . }}
+{{ end }})
+
+declared_list=$(printf '%s\n' "${declared_packages[@]}" | sort -u)
+installed_list=$(pacman -Qq | sort -u)
+explicitly_installed_list=$(pacman -Qqe | sort -u)
+missing=$(comm -23 <(printf '%s\n' "$declared_list") <(printf '%s\n' "$installed_list"))
+# `base` is part of the system bootstrap and is intentionally not tracked here.
+extra=$(comm -13 <(printf '%s\n' "$declared_list") <(printf '%s\n' "$explicitly_installed_list" | sed '/^base$/d'))
+
+if [[ -t 1 && -z "${NO_COLOR:-}" ]]; then
+    extra_color=$'\033[1;33m'
+    color_reset=$'\033[0m'
+else
+    extra_color=''
+    color_reset=''
+fi
+
+echo 'Running package synchronization...'
+
+if [[ -n "$extra" ]]; then
+    printf '%b%s%b\n' "$extra_color" 'The following packages are installed but not in the packages.yml' "$color_reset"
+    printf '%s\n' "$extra" | sed 's/^/  /'
+fi
+
+if [[ -n "$missing" ]]; then
+    mapfile -t packages_to_install <<< "$missing"
+    printf 'Installing missing pacman packages: %s\n' "${packages_to_install[*]}"
+    sudo pacman -S --needed --noconfirm "${packages_to_install[@]}"
+fi
 {{- end }}
 
 # Change shell to fish if installed
@@ -26,5 +57,7 @@ if command -v fish >/dev/null 2>&1; then
         chsh -s "$FISH_PATH"
     fi
 fi
+
+echo 'Finished package synchronization.'
 
 {{ end -}}

@@ -1,0 +1,16 @@
+themes {
+    starship {
+        fg  "#F4F1F3"
+        bg  "#1F2630"
+
+        black   "#26313D"
+        red     "#DA627D"
+        green   "#86BBD8"
+        yellow  "#FCA17D"
+        blue    "#86BBD8"
+        magenta "#9A348E"
+        orange  "#FCA17D"
+        cyan    "#33658A"
+        white   "#FFFFFF"
+    }
+}
