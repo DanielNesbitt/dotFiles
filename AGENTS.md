@@ -10,10 +10,15 @@ Personal chezmoi dotfiles source state, applied to WSL/Arch Linux and macOS.
   `run_onchange_arch-install-packages.sh.tmpl`. Add a package once here
   rather than editing the install scripts.
 - `.chezmoidata/shell-env.yaml` — shared `PATH` entries and env vars,
-  rendered by `run_onchange_setup-shell-env.sh.tmpl` into both a fish
-  `conf.d` snippet and `~/.config/shell-env.sh`, so bash (including agentic
-  tools that spawn one) sees the same env as the fish login shell. Runs on
-  every platform, not just Arch.
+  rendered into two places so bash (including agentic tools that spawn one)
+  sees the same env as the fish login shell:
+  - `dot_config/private_fish/conf.d/chezmoi-env.fish.tmpl` — the fish
+    `conf.d` snippet (a managed file).
+  - `run_onchange_setup-shell-env.sh.tmpl` — writes `~/.config/shell-env.sh`
+    for bash. Runs on every platform, not just Arch.
+
+  Each target has exactly one writer; don't have the script write the fish
+  snippet too, or the two will overwrite each other.
 
 ## .chezmoiignore
 
