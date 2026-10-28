@@ -20,6 +20,11 @@ if status is-interactive
 	zoxide init fish | source
     end
 
+    # Direnv initialization
+    if command -v direnv > /dev/null
+        direnv hook fish | source
+    end
+
     # Mise initialization
     #if command -v mise > /dev/null
     #    mise activate fish | source
