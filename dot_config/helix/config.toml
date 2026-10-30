@@ -1,0 +1,16 @@
+theme = "tinacious_design"
+
+# Ctrl-y: pick a file in yazi and open it in Helix.
+[keys.normal]
+C-y = [
+  ':sh rm -f /tmp/yazi-chooser',
+  ':insert-output yazi %{buffer_name} --chooser-file=/tmp/yazi-chooser',
+  ':insert-output echo "\x1b[?1049h\x1b[?2004h" > /dev/tty',
+  ':open %sh{cat /tmp/yazi-chooser}',
+  ':redraw',
+]
+
+[editor]
+# Windows Terminal doesn't set COLORTERM, so Helix assumes 16 colours and
+# swaps any truecolor theme for base16_default.
+true-color = true

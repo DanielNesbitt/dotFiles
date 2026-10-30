@@ -1,0 +1,118 @@
+# Tinacious Design (dark), adapted from the VS Code theme by Tina Holly.
+# Helix colours can't be translucent, so the theme's alpha colours are
+# pre-blended over the background.
+
+"attribute" = "green"
+"comment" = "comment"
+"constant" = "purple"
+"constructor" = "cyan"
+"function" = "green"
+"function.builtin" = "cyan"
+"function.macro" = "cyan"
+"keyword" = { fg = "pink", modifiers = ["bold"] }
+"keyword.function" = { fg = "blue", modifiers = ["italic", "bold"] }
+"keyword.storage" = "pink"
+"keyword.storage.type" = { fg = "blue", modifiers = ["italic", "bold"] }
+"label" = "pink"
+"namespace" = "blue"
+"operator" = "pink"
+"punctuation" = "fg"
+"special" = "cyan"
+"string" = "yellow"
+"string.special.url" = { fg = "blue", modifiers = ["underlined"] }
+"tag" = "pink"
+"type" = "green"
+"type.builtin" = { fg = "blue", modifiers = ["italic"] }
+"type.enum.variant" = "cyan"
+"variable" = "fg"
+"variable.builtin" = "purple"
+"variable.parameter" = { fg = "yellow", modifiers = ["italic"] }
+
+"markup.bold" = { fg = "white", modifiers = ["bold"] }
+"markup.heading" = { fg = "pink", modifiers = ["bold"] }
+"markup.italic" = { fg = "yellow", modifiers = ["italic"] }
+"markup.link.text" = "pink"
+"markup.link.url" = { fg = "blue", modifiers = ["underlined"] }
+"markup.list" = { fg = "pink", modifiers = ["bold"] }
+"markup.quote" = { fg = "fg", modifiers = ["italic"] }
+"markup.raw" = "cyan"
+"markup.strikethrough" = { modifiers = ["crossed_out"] }
+
+"diff.delta" = "yellow"
+"diff.minus" = "pink"
+"diff.plus" = "green"
+
+"error" = "pink"
+"warning" = "yellow"
+"info" = "blue"
+"hint" = "cyan"
+"diagnostic.error" = { underline = { color = "pink", style = "curl" } }
+"diagnostic.warning" = { underline = { color = "yellow", style = "curl" } }
+"diagnostic.info" = { underline = { color = "blue", style = "curl" } }
+"diagnostic.hint" = { underline = { color = "cyan", style = "curl" } }
+"diagnostic.unnecessary" = { modifiers = ["dim"] }
+"diagnostic.deprecated" = { modifiers = ["crossed_out"] }
+
+"ui.background" = { bg = "bg" }
+"ui.text" = "fg"
+"ui.text.focus" = { fg = "white", bg = "menu_selected", modifiers = ["bold"] }
+"ui.text.inactive" = "comment"
+"ui.text.directory" = "blue"
+"ui.highlight" = { bg = "line", modifiers = ["bold"] }
+
+"ui.cursor" = { fg = "bg", bg = "purple" }
+"ui.cursor.primary" = { fg = "bg", bg = "pink" }
+"ui.cursor.primary.insert" = { fg = "bg", bg = "green" }
+"ui.cursor.primary.select" = { fg = "bg", bg = "purple" }
+"ui.cursor.match" = { bg = "bright_black", modifiers = ["bold"] }
+"ui.cursorline.primary" = { bg = "line" }
+"ui.selection" = { bg = "selection_dim" }
+"ui.selection.primary" = { bg = "selection" }
+
+"ui.linenr" = "linenr"
+"ui.linenr.selected" = "white"
+"ui.gutter" = { bg = "bg" }
+
+"ui.statusline" = { fg = "fg", bg = "line" }
+"ui.statusline.inactive" = { fg = "comment", bg = "bg_alt" }
+"ui.statusline.normal" = { fg = "white", bg = "pink", modifiers = ["bold"] }
+"ui.statusline.insert" = { fg = "bg", bg = "green", modifiers = ["bold"] }
+"ui.statusline.select" = { fg = "bg", bg = "purple", modifiers = ["bold"] }
+"ui.bufferline" = { fg = "comment", bg = "bg_alt" }
+"ui.bufferline.active" = { fg = "white", bg = "line" }
+
+"ui.popup" = { fg = "fg", bg = "popup" }
+"ui.help" = { fg = "fg", bg = "popup" }
+"ui.window" = "bright_black"
+"ui.menu" = { fg = "fg", bg = "popup" }
+"ui.menu.selected" = { fg = "white", bg = "menu_selected" }
+"ui.menu.scroll" = { fg = "purple", bg = "popup" }
+
+"ui.virtual.whitespace" = "bright_black"
+"ui.virtual.indent-guide" = "indent"
+"ui.virtual.ruler" = { bg = "line" }
+"ui.virtual.inlay-hint" = { fg = "comment", modifiers = ["italic"] }
+"ui.virtual.jump-label" = { fg = "pink", modifiers = ["bold"] }
+
+[palette]
+bg = "#1D1D26"
+bg_alt = "#1D1D27"
+line = "#2C2C3E"
+popup = "#2A2A38"
+bright_black = "#3D3D56"
+fg = "#B3B3D4"
+white = "#FFFFFF"
+comment = "#686889"
+pink = "#FF3399"
+yellow = "#FFCC66"
+green = "#00D364"
+cyan = "#00CED1"
+blue = "#00BFFF"
+purple = "#CC66FF"
+
+# Blended from the VS Code theme's translucent colours.
+selection = "#4A213D"      # #ff339933
+selection_dim = "#3A2035"  # #ff339921
+linenr = "#636377"         # #b3b3d477
+indent = "#272733"         # #2d2d3c99
+menu_selected = "#4B4B5B"  # #b3b3d44e

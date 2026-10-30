@@ -12,6 +12,8 @@ packages:
     - zellij
     - mise
     - just
+    - helix
+    - yazi
   pacman:
     - sudo
     - vim
@@ -54,3 +56,5 @@ packages:
     - zoxide
     - github-cli
     - direnv
+    - helix
+    - yazi
