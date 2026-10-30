@@ -1,0 +1,7 @@
+{
+  "name": "Dark ANSI (terminal selection)",
+  "base": "dark-ansi",
+  "overrides": {
+    "selectionBg": "ansi:red"
+  }
+}

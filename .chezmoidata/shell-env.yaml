@@ -7,3 +7,4 @@ shell:
     - /opt/homebrew/bin
   envVars:
     EDITOR: helix
+    COLORTERM: truecolor
