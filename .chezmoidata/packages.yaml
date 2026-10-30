@@ -58,3 +58,4 @@ packages:
     - direnv
     - helix
     - yazi
+    - fd

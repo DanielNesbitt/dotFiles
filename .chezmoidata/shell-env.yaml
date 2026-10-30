@@ -6,4 +6,4 @@ shell:
     - ~/go/bin
     - /opt/homebrew/bin
   envVars:
-    EDITOR: vim
+    EDITOR: helix
