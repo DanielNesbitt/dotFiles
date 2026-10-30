@@ -8,7 +8,10 @@ Personal chezmoi dotfiles source state, applied to WSL/Arch Linux and macOS.
 - `.chezmoidata/packages.yaml` — package lists (`brew`, `pacman`), consumed
   by `run_onchange_macos-install-packages.sh.tmpl` and
   `run_onchange_arch-install-packages.sh.tmpl`. Add a package once here
-  rather than editing the install scripts.
+  rather than editing the install scripts. These are the common lists.
+- `.chezmoidata/machines.yaml` — per-machine extras keyed by
+  `.chezmoi.hostname`, installed on top of the common lists. Hosts without
+  an entry get only the common packages.
 - `.chezmoidata/shell-env.yaml` — shared `PATH` entries and env vars,
   rendered into two places so bash (including agentic tools that spawn one)
   sees the same env as the fish login shell:

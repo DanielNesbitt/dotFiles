@@ -9,10 +9,12 @@ if ! command -v brew >/dev/null 2>&1; then
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
-{{- $packages := list -}}
-{{- range .packages.brew -}}
-{{- $packages = append $packages . -}}
-{{- end -}}
+{{- $machine := index .machines .chezmoi.hostname | default dict -}}
+{{- $packages := concat .packages.brew (get $machine "brew" | default list) -}}
+
+{{- if not (hasKey .machines .chezmoi.hostname) }}
+echo "No machine entry for {{ .chezmoi.hostname }} in .chezmoidata/machines.yaml; installing common packages only."
+{{- end }}
 
 {{- if $packages }}
 echo "Installing brew packages: {{ join " " $packages }}"

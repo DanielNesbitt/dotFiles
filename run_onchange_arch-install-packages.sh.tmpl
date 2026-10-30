@@ -4,10 +4,12 @@
 set -eo pipefail
 export LC_ALL=C
 
-{{- $packages := list -}}
-{{- range .packages.pacman -}}
-{{- $packages = append $packages . -}}
-{{- end -}}
+{{- $machine := index .machines .chezmoi.hostname | default dict -}}
+{{- $packages := concat .packages.pacman (get $machine "pacman" | default list) -}}
+
+{{- if not (hasKey .machines .chezmoi.hostname) }}
+echo "No machine entry for {{ .chezmoi.hostname }} in .chezmoidata/machines.yaml; installing common packages only."
+{{- end }}
 
 {{- if $packages }}
 # Compare the manifest with installed packages before installing.

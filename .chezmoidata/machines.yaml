@@ -1,0 +1,14 @@
+# Per-machine package extras, keyed by `.chezmoi.hostname`. Installed on top
+# of the common lists in packages.yaml.
+machines:
+  tyr:
+    brew:
+      - yt-dlp
+      - ollama
+  thor:
+    pacman: []
+  GEN-FLASH:
+    pacman:
+      - glab
+      - opencode
+      - postgresql
