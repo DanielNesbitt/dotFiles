@@ -1,6 +1,7 @@
 packages:
   brew:
     - git
+    - chezmoi
     - atuin
     - starship
     - fish
@@ -14,6 +15,10 @@ packages:
     - just
     - helix
     - yazi
+    - uv
+    - rsync
+    - ffmpeg
+    - gh
   pacman:
     - sudo
     - vim
@@ -59,3 +64,5 @@ packages:
     - helix
     - yazi
     - fd
+    - rsync
+    - ffmpeg
