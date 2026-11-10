@@ -20,46 +20,65 @@ packages:
     - ffmpeg
     - gh
   pacman:
-    - sudo
-    - vim
-    - which
-    - openssh
-    - less
-    - git
-    - chezmoi
-    - atuin
-    - starship
-    - fish
-    - eza
-    - xdg-utils
+    # Base system
     - base-devel
+    - expac
+    - less
     - man-db
-    - rustup
-    - jq
-    - nodejs-lts-jod
-    - npm
-    - podman
-    - podman-compose
-    - tree
-    - ripgrep
-    - go
+    - openssh
+    - sudo
+    - usage
+    - which
+    - xdg-utils
+
+    # Shell and prompt
+    - atuin
+    - fish
+    - starship
+    - zoxide
+
+    # Terminal and editors
+    - helix
     - neovim
     - zellij
+
+    # Files and search
+    - bottom
+    - eza
+    - fd
+    - ripgrep
+    - tree
+    - yazi
+
+    # Languages and toolchains
+    - go
+    - mise
+    - nodejs-lts-jod
+    - npm
+    - rustup
+    - uv
+
+    # Containers
+    - podman
+    - podman-compose
+
+    # Git and GitHub
+    - chezmoi
+    - direnv
+    - git
+    - github-cli
+
+    # Security and secrets
+    - gitleaks
+    - gnupg
+    - pass
+    - pinentry
+
+    # Network, media and utilities
+    - dos2unix
+    - ffmpeg
+    - jq
     - just
+    - rsync
     - unzip
     - wget
-    - mise
-    - expac
-    - usage
-    - uv
-    - dos2unix
-    - bottom
-    - pass
-    - zoxide
-    - github-cli
-    - direnv
-    - helix
-    - yazi
-    - fd
-    - rsync
-    - ffmpeg

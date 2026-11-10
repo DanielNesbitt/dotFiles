@@ -2,3 +2,7 @@ README.md
 AGENTS.md
 CLAUDE.md
 .config/fish/fish_variables
+{{ if eq .chezmoi.os "darwin" -}}
+.gnupg
+.config/fish/conf.d/gpg.fish
+{{ end -}}
