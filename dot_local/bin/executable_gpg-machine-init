@@ -1,0 +1,202 @@
+#!/usr/bin/env bash
+# Creates this machine's 1Password passphrase, encrypt-only GPG key, and pass store,
+# and writes the reference file read by pinentry-op. Run by hand; never migrates a store.
+set -euo pipefail
+
+usage() {
+  cat <<'EOF'
+Usage: gpg-machine-init [--vault NAME] [--dry-run]
+
+Creates the per-machine credentials used by pinentry-op:
+  - 1Password item gpg-<hostname> with a generated passphrase in the vault
+  - encrypt-only GPG key: ed25519 certify-only primary plus cv25519 encryption
+    subkey, neither expiring. No signing subkey, no revocation certificate.
+  - a fresh pass store at $PASSWORD_STORE_DIR (default ~/.password-store)
+  - the reference file ~/.config/pinentry-op/ref
+
+It never migrates or re-encrypts an existing pass store. If one exists, move it aside first.
+
+Options:
+  --vault NAME  1Password vault to use (default: Employee)
+  --dry-run     Run every preflight check and print the planned actions. Changes nothing.
+  -h, --help    Show this help.
+EOF
+}
+
+vault=Employee
+dry_run=0
+while (($#)); do
+  case $1 in
+    --vault)
+      [[ $# -ge 2 && -n $2 ]] || { echo "gpg-machine-init: --vault needs a name" >&2; exit 1; }
+      vault=$2
+      shift 2
+      ;;
+    --dry-run)
+      dry_run=1
+      shift
+      ;;
+    -h | --help)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "gpg-machine-init: unknown argument: $1" >&2
+      usage >&2
+      exit 1
+      ;;
+  esac
+done
+
+host=$(uname -n)
+item="gpg-$host"
+ref="op://$vault/$item/password"
+uid="${USER:-$(id -un)}@$host (machine key)"
+ref_file="${XDG_CONFIG_HOME:-$HOME/.config}/pinentry-op/ref"
+store_dir="${PASSWORD_STORE_DIR:-$HOME/.password-store}"
+
+fpr=""
+created_item=0
+created_key=0
+created_store=0
+created_ref=0
+
+have() {
+  command -v "$1" >/dev/null 2>&1
+}
+
+lookup_fpr() {
+  gpg --list-secret-keys --with-colons "$uid" 2>/dev/null |
+    awk -F: '$1 == "fpr" && !found { print $10; found = 1 }' || true
+}
+
+failures=0
+problem() {
+  failures=$((failures + 1))
+  printf 'FAIL: %s\n      fix: %s\n' "$1" "$2" >&2
+}
+
+echo "Preflight checks for $uid:"
+
+have gpg || problem "gpg is not on PATH" "sudo pacman -S gnupg"
+have pass || problem "pass is not on PATH" "sudo pacman -S pass"
+
+if ! have op; then
+  problem "1Password CLI (op) is not on PATH" 'See README: "Machine credentials".'
+elif ! op vault get "$vault" >/dev/null 2>&1; then
+  problem "1Password CLI cannot read vault '$vault'" "Unlock the 1Password desktop app and enable its CLI integration (SSO accounts cannot use op signin). Vault not found? Pass --vault NAME; list vaults with: op vault list. See README: \"Machine credentials\"."
+elif op item get "$item" --vault "$vault" >/dev/null 2>&1; then
+  problem "1Password item $item exists in $vault" "Item $item exists. Delete or archive it in 1Password to start over."
+fi
+
+if [[ -e $ref_file ]]; then
+  problem "reference file exists" "Already initialised: $ref_file. Remove it to start over."
+fi
+
+if have gpg; then
+  existing_fpr=$(lookup_fpr)
+  if [[ -n $existing_fpr ]]; then
+    problem "GPG key for $uid exists" "Key for $uid exists. Delete it to start over: gpg --delete-secret-and-public-key $existing_fpr"
+  fi
+fi
+
+if [[ -e $store_dir ]]; then
+  recipient=$(head -n 1 "$store_dir/.gpg-id" 2>/dev/null || true)
+  problem "pass store exists at $store_dir" "Existing pass store at $store_dir (recipient: ${recipient:-unknown}). Move it aside: mv $store_dir $store_dir.old"
+fi
+
+if ! grep -qs 'pinentry-op' "$HOME/.gnupg/gpg-agent.conf"; then
+  problem "gpg-agent.conf does not use pinentry-op" "gpg-agent.conf does not use pinentry-op. Check that this machine's profile sets op_pinentry and run chezmoi apply."
+fi
+
+if ((failures > 0)); then
+  echo "$failures check(s) failed. Nothing was changed." >&2
+  exit 1
+fi
+echo "All preflight checks passed."
+
+if ((dry_run)); then
+  cat <<EOF
+Dry run; nothing was changed. Planned actions:
+  1. mkdir -p ~/.gnupg (mode 700)
+  2. create 1Password item $item in vault $vault with a generated passphrase
+  3. create the ed25519 certify-only key for $uid, no expiry
+  4. add the cv25519 encryption subkey, no expiry
+  5. pass init into $store_dir
+  6. write $ref to $ref_file (mode 600)
+  7. verify an encrypt/decrypt round trip
+EOF
+  exit 0
+fi
+
+on_error() {
+  echo >&2
+  echo "gpg-machine-init failed. Nothing was removed. Undo what was created with:" >&2
+  if ((created_item)); then
+    printf '  op item delete "%s" --vault "%s"\n' "$item" "$vault" >&2
+  fi
+  if ((created_key)); then
+    fpr=${fpr:-$(lookup_fpr)}
+    printf '  gpg --delete-secret-and-public-key %s\n' "${fpr:-<fingerprint from gpg -K>}" >&2
+  fi
+  if ((created_store)); then
+    printf '  rm -rf "%s"\n' "$store_dir" >&2
+  fi
+  if ((created_ref)); then
+    printf '  rm -f "%s"\n' "$ref_file" >&2
+  fi
+  if ((created_item + created_key + created_store + created_ref == 0)); then
+    echo "  (nothing was created)" >&2
+  fi
+}
+trap on_error ERR
+
+mkdir -p "$HOME/.gnupg"
+chmod 700 "$HOME/.gnupg"
+
+op item create --category=password --vault="$vault" --title="$item" \
+  --generate-password='letters,digits,symbols,32'
+created_item=1
+
+pass_phrase=$(op read "$ref")
+[[ -n $pass_phrase ]]
+
+created_key=1
+gpg --batch --pinentry-mode loopback --passphrase-fd 3 \
+  --quick-gen-key "$uid" ed25519 cert never 3< <(printf '%s' "$pass_phrase")
+fpr=$(lookup_fpr)
+[[ -n $fpr ]]
+rm -f "$HOME/.gnupg/openpgp-revocs.d/$fpr.rev"
+
+gpg --batch --pinentry-mode loopback --passphrase-fd 3 \
+  --quick-add-key "$fpr" cv25519 encr never 3< <(printf '%s' "$pass_phrase")
+
+unset pass_phrase
+
+created_store=1
+pass init "$fpr"
+
+created_ref=1
+mkdir -p "$(dirname "$ref_file")"
+printf '%s\n' "$ref" >"$ref_file"
+chmod 600 "$ref_file"
+
+echo "Verifying an encrypt/decrypt round trip..."
+gpg-connect-agent reloadagent /bye >/dev/null 2>&1 || true
+if printf ok | gpg --batch -e -r "$fpr" | gpg -d >/dev/null 2>&1; then
+  echo "Decrypt succeeded. If no curses dialog appeared, pinentry-op answered the passphrase prompt."
+  echo "If a curses dialog appeared, pinentry-op fell back. Check $ref_file, that op is signed in, and the README section \"Machine credentials\"."
+else
+  echo "Decrypt FAILED. Check $ref_file, that op is signed in, and the README section \"Machine credentials\" for op authentication from the gpg-agent context."
+fi
+
+cat <<EOF
+
+Done.
+  GPG fingerprint: $fpr
+  1Password item:  $item (vault $vault), reference $ref
+  Reference file:  $ref_file
+  Pass store:      $store_dir
+
+Record every credential issued to this machine in the notes of 1Password item $item.
+EOF

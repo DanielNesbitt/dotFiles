@@ -10,6 +10,8 @@ CLAUDE.md
 .local/bin/warp-kill
 .local/bin/warp-start
 {{ end -}}
-{{ if not (dig "machines" .chezmoi.hostname "gpg_passphrase_ref" "" .) -}}
+{{- $profile := dig "profile" "" . }}
+{{ if not (dig "profiles" $profile "op_pinentry" false .) -}}
 .local/bin/pinentry-op
+.local/bin/gpg-machine-init
 {{ end -}}

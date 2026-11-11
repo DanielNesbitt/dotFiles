@@ -5,13 +5,17 @@ Personal chezmoi dotfiles source state, applied to WSL/Arch Linux and macOS.
 
 ## Shared config
 
+- `.chezmoidata/profiles.yaml` — roles keyed by `.profile`, which is chosen
+  once at `chezmoi init` via `.chezmoi.toml.tmpl` and stored in the local
+  chezmoi config. Read it with `dig "profile" "" .` (never assume it is set),
+  and look up profile data with `dig "profiles" $profile "<key>" <default> .`.
+  Several machines can share a profile. Never add hostnames or 1Password
+  references to the repo. The prompt text `profile` is part of the interface
+  (`chezmoi init --promptChoice profile=<name>`) and must not change.
 - `.chezmoidata/packages.yaml` — package lists (`brew`, `pacman`), consumed
   by `run_onchange_macos-install-packages.sh.tmpl` and
   `run_onchange_arch-install-packages.sh.tmpl`. Add a package once here
   rather than editing the install scripts. These are the common lists.
-- `.chezmoidata/machines.yaml` — per-machine extras keyed by
-  `.chezmoi.hostname`, installed on top of the common lists. Hosts without
-  an entry get only the common packages.
 - `.chezmoidata/shell-env.yaml` — shared `PATH` entries and env vars,
   rendered into two places so bash (including agentic tools that spawn one)
   sees the same env as the fish login shell:
@@ -29,6 +33,20 @@ Repo-root files that must never be written to `$HOME` (docs, this file,
 `CLAUDE.md`) are listed in `.chezmoiignore`. If you add another doc-only
 file to the repo root, add it there too and confirm with
 `chezmoi apply --dry-run -v` that it doesn't show up as a target write.
+
+## Machine credentials
+
+- `gpg-machine-init` is interactive and creates 1Password items and GPG keys
+  on the live machine. Agents must never run it, not even with `--dry-run`,
+  because its preflight calls `op`.
+- `pinentry-op` reads its 1Password reference from
+  `~/.config/pinentry-op/ref`. That file is intentionally unmanaged: never
+  add it to the repo or template it.
+
+## Testing chezmoi
+
+- Never run `chezmoi init` without `--config` and `--destination` pointing at
+  temp paths. Without them it overwrites the real config.
 
 ## Safety: this repo controls a live machine
 

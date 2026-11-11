@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+# Minimal Assuan pinentry that answers GETPIN from 1Password.
+# The op:// reference is read from ${XDG_CONFIG_HOME:-$HOME/.config}/pinentry-op/ref,
+# written by gpg-machine-init. The file is intentionally unmanaged by chezmoi.
+# Falls back to pinentry-curses if the reference or the lookup is unavailable.
+
+fallback=/usr/bin/pinentry-curses
+ref_file="${XDG_CONFIG_HOME:-$HOME/.config}/pinentry-op/ref"
+
+fall_back() {
+  exec "$fallback" "$@"
+}
+
+# Fetch the passphrase before speaking any protocol: once the Assuan
+# conversation has started, there is no clean way to hand over to another pinentry.
+[[ -s $ref_file ]] || fall_back "$@"
+ref=$(head -n 1 "$ref_file")
+[[ -n $ref ]] || fall_back "$@"
+op_bin=$(command -v op || true)
+[[ -n $op_bin ]] || op_bin="$HOME/.local/bin/op"
+[[ -x $op_bin ]] || fall_back "$@"
+pass_phrase=$(timeout 30 "$op_bin" read "$ref" 2>/dev/null </dev/null) || fall_back "$@"
+[[ -n $pass_phrase ]] || fall_back "$@"
+
+urlencode() {
+  local s=$1 out="" c i
+  for ((i = 0; i < ${#s}; i++)); do
+    c=${s:i:1}
+    case $c in
+      %) out+="%25" ;;
+      $'\r') out+="%0D" ;;
+      $'\n') out+="%0A" ;;
+      *) out+="$c" ;;
+    esac
+  done
+  printf '%s' "$out"
+}
+
+rejected=0
+
+echo "OK Pleased to meet you"
+
+while IFS= read -r line; do
+  cmd=${line%% *}
+  case $cmd in
+    SETERROR)
+      # gpg-agent sends this when the previous passphrase was rejected.
+      rejected=1
+      echo "OK"
+      ;;
+    GETPIN)
+      if ((rejected)); then
+        echo "ERR 83886179 Operation cancelled"
+      else
+        printf 'D %s\n' "$(urlencode "$pass_phrase")"
+        echo "OK"
+      fi
+      ;;
+    BYE)
+      echo "OK closing connection"
+      exit 0
+      ;;
+    *)
+      echo "OK"
+      ;;
+  esac
+done

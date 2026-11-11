@@ -3,19 +3,22 @@
 
 set -e
 
+{{- $profile := dig "profile" "" . }}
+{{- if not $profile }}
+echo "No profile set; run 'chezmoi init' to choose one."
+exit 1
+{{- else if not (hasKey .profiles $profile) }}
+echo "Profile {{ $profile }} is not in .chezmoidata/profiles.yaml; run 'chezmoi init' to choose a valid one."
+exit 1
+{{- else }}
+
 # Ensure Homebrew is installed
 if ! command -v brew >/dev/null 2>&1; then
     echo "Installing Homebrew..."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
-{{- $machine := index .machines .chezmoi.hostname | default dict -}}
-{{- $packages := concat .packages.brew (get $machine "brew" | default list) -}}
-
-{{- if not (hasKey .machines .chezmoi.hostname) }}
-echo "No machine entry for {{ .chezmoi.hostname }} in .chezmoidata/machines.yaml; installing common packages only."
-{{- end }}
-
+{{- $packages := concat .packages.brew (dig "profiles" $profile "brew" list .) }}
 {{- if $packages }}
 # Compare the manifest with installed formulae before installing.
 declared_packages=(
@@ -70,4 +73,5 @@ fi
 
 echo 'Finished package synchronization.'
 
+{{- end }}
 {{ end -}}

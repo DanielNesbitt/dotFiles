@@ -37,6 +37,12 @@ wsl --manage archlinux --set-default-user username
 ```sh
 chezmoi init --verbose git@github.com:DanielNesbitt/dotFiles.git
 ```
+
+`chezmoi init` asks which profile this machine uses: `home-mac`, `home-wsl`, or `work-wsl` (see `.chezmoidata/profiles.yaml`). For unattended runs:
+```sh
+chezmoi init --promptChoice profile=<name> git@github.com:DanielNesbitt/dotFiles.git
+```
+To change a machine's profile later, remove `profile` from `~/.config/chezmoi/chezmoi.toml` and rerun `chezmoi init`.
 - [ ] Restart the session to change into the new shell
 
 # macOS
@@ -53,11 +59,36 @@ brew install chezmoi
 ```sh
 chezmoi init --verbose git@github.com:DanielNesbitt/dotFiles.git
 ```
+`chezmoi init` asks which profile this machine uses: `home-mac`, `home-wsl`, or `work-wsl` (see `.chezmoidata/profiles.yaml`). For unattended runs:
+```sh
+chezmoi init --promptChoice profile=<name> git@github.com:DanielNesbitt/dotFiles.git
+```
+To change a machine's profile later, remove `profile` from `~/.config/chezmoi/chezmoi.toml` and rerun `chezmoi init`.
 - [ ] Apply:
 ```sh
 chezmoi apply
 ```
 This installs the `brew` packages listed in `.chezmoidata/packages.yaml` and switches the login shell to fish — see `run_onchange_macos-install-packages.sh.tmpl` below.
+
+# Machine credentials (post-apply)
+
+Profiles with `op_pinentry` get `gpg-machine-init`. After the first `chezmoi apply`:
+
+1. Install the 1Password CLI (`op`). In WSL, use the Linux `op`. Authenticate
+   through the 1Password desktop app's CLI integration (Settings → Developer →
+   Integrate with 1Password CLI), not `op signin`. `op signin` does not work
+   for SSO accounts. Check with `op whoami`.
+   pinentry-op runs from gpg-agent, not your shell, so `op` must be able to
+   authenticate without a shell session token. Otherwise gpg falls back to
+   `pinentry-curses`.
+2. Run `gpg-machine-init`. It checks prerequisites and prints the fix for anything missing.
+
+Each machine gets its own GPG key and passphrase (1Password item `gpg-<hostname>`).
+The pass store is per machine and disposable. If a machine is lost, revoke the
+credentials listed in its 1Password item notes and issue new ones to the
+replacement machine.
+
+Until the script has run, gpg uses `pinentry-curses`.
 
 ## Shared package/env config
 

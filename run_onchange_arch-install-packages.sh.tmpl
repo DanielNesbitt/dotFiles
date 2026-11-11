@@ -4,13 +4,15 @@
 set -eo pipefail
 export LC_ALL=C
 
-{{- $machine := index .machines .chezmoi.hostname | default dict -}}
-{{- $packages := concat .packages.pacman (get $machine "pacman" | default list) -}}
-
-{{- if not (hasKey .machines .chezmoi.hostname) }}
-echo "No machine entry for {{ .chezmoi.hostname }} in .chezmoidata/machines.yaml; installing common packages only."
-{{- end }}
-
+{{- $profile := dig "profile" "" . -}}
+{{- if not $profile }}
+echo "No profile set; run 'chezmoi init' to choose one."
+exit 1
+{{- else if not (hasKey .profiles $profile) }}
+echo "Profile {{ $profile }} is not in .chezmoidata/profiles.yaml; run 'chezmoi init' to choose a valid one."
+exit 1
+{{- else }}
+{{- $packages := concat .packages.pacman (dig "profiles" $profile "pacman" list .) }}
 {{- if $packages }}
 # Compare the manifest with installed packages before installing.
 declared_packages=(
@@ -62,4 +64,5 @@ fi
 
 echo 'Finished package synchronization.'
 
+{{- end }}
 {{ end -}}

@@ -1,0 +1,18 @@
+# Per-role package extras and capability flags, keyed by the profile chosen
+# at `chezmoi init` (stored as `.profile` in the local chezmoi config).
+# Installed on top of the common lists in packages.yaml.
+# The keys here are the choices offered by .chezmoi.toml.tmpl.
+profiles:
+  home-mac:
+    brew:
+      - yt-dlp
+      - ollama
+  home-wsl:
+    pacman: []
+  work-wsl:
+    pacman:
+      - glab
+      - opencode
+      - postgresql
+    # Deploys pinentry-op and gpg-machine-init, and points gpg-agent at pinentry-op.
+    op_pinentry: true
