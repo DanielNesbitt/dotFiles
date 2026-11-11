@@ -183,16 +183,24 @@ chmod 600 "$ref_file"
 
 echo "Verifying an encrypt/decrypt round trip..."
 gpg-connect-agent reloadagent /bye >/dev/null 2>&1 || true
+verified=0
 if printf ok | gpg --batch -e -r "$fpr" | gpg -d >/dev/null 2>&1; then
+  verified=1
   echo "Decrypt succeeded. If no curses dialog appeared, pinentry-op answered the passphrase prompt."
   echo "If a curses dialog appeared, pinentry-op fell back. Check $ref_file, that op is signed in, and the README section \"Machine credentials\"."
 else
   echo "Decrypt FAILED. Check $ref_file, that op is signed in, and the README section \"Machine credentials\" for op authentication from the gpg-agent context."
 fi
 
+if ((verified)); then
+  status="Done."
+else
+  status="Credentials created, but verification FAILED. Fix the issue above before relying on this setup."
+fi
+
 cat <<EOF
 
-Done.
+$status
   GPG fingerprint: $fpr
   1Password item:  $item (vault $vault), reference $ref
   Reference file:  $ref_file
@@ -200,3 +208,5 @@ Done.
 
 Record every credential issued to this machine in the notes of 1Password item $item.
 EOF
+
+((verified)) || exit 1

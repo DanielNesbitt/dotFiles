@@ -1,6 +1,10 @@
 {{- /* Prompt text "profile" is the key for --promptChoice; do not change it. */ -}}
 {{- $data := include ".chezmoidata/profiles.yaml" | fromYaml -}}
-{{- $choices := keys $data.profiles | sortAlpha -}}
+{{- /* promptChoiceOnce needs []interface{}, but sortAlpha returns []string. */ -}}
+{{- $choices := list -}}
+{{- range keys $data.profiles | sortAlpha -}}
+{{-   $choices = append $choices . -}}
+{{- end -}}
 {{- $profile := promptChoiceOnce . "profile" "profile" $choices -}}
 {{- if not (has $profile $choices) -}}
 {{-   fail (printf "unknown profile %q; valid: %s" $profile (join ", " $choices)) -}}

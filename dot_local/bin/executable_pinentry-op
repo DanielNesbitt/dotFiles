@@ -2,7 +2,8 @@
 # Minimal Assuan pinentry that answers GETPIN from 1Password.
 # The op:// reference is read from ${XDG_CONFIG_HOME:-$HOME/.config}/pinentry-op/ref,
 # written by gpg-machine-init. The file is intentionally unmanaged by chezmoi.
-# Falls back to pinentry-curses if the reference or the lookup is unavailable.
+# Falls back to pinentry-curses if the reference or the lookup is unavailable,
+# or if gpg-agent rejects the 1Password passphrase (e.g. for another key).
 
 fallback=/usr/bin/pinentry-curses
 ref_file="${XDG_CONFIG_HOME:-$HOME/.config}/pinentry-op/ref"
@@ -36,21 +37,58 @@ urlencode() {
   printf '%s' "$out"
 }
 
+# Commands received so far, replayed to the fallback pinentry if the
+# 1Password passphrase is rejected (e.g. a different key is being unlocked).
+history=()
 rejected=0
+proxying=0
+
+# Relay fallback responses to gpg-agent until the final OK or ERR line.
+relay() {
+  local reply
+  while IFS= read -r reply <&"${fb[0]}"; do
+    [[ -n $1 ]] && printf '%s\n' "$reply"
+    case $reply in OK* | ERR*) return 0 ;; esac
+  done
+  return 1
+}
+
+start_fallback() {
+  coproc fb { "$fallback" "$@"; }
+  relay "" || return 1
+  local h
+  for h in "${history[@]}"; do
+    printf '%s\n' "$h" >&"${fb[1]}"
+    relay "" || return 1
+  done
+  proxying=1
+}
 
 echo "OK Pleased to meet you"
 
 while IFS= read -r line; do
+  if ((proxying)); then
+    printf '%s\n' "$line" >&"${fb[1]}"
+    relay 1 || exit 1
+    [[ ${line%% *} == BYE ]] && exit 0
+    continue
+  fi
   cmd=${line%% *}
   case $cmd in
     SETERROR)
       # gpg-agent sends this when the previous passphrase was rejected.
       rejected=1
+      history+=("$line")
       echo "OK"
       ;;
     GETPIN)
       if ((rejected)); then
-        echo "ERR 83886179 Operation cancelled"
+        if start_fallback "$@"; then
+          printf '%s\n' "$line" >&"${fb[1]}"
+          relay 1 || exit 1
+        else
+          echo "ERR 83886179 Operation cancelled"
+        fi
       else
         printf 'D %s\n' "$(urlencode "$pass_phrase")"
         echo "OK"
@@ -61,6 +99,7 @@ while IFS= read -r line; do
       exit 0
       ;;
     *)
+      history+=("$line")
       echo "OK"
       ;;
   esac
