@@ -41,6 +41,7 @@ packages:
     - helix
     - neovim
     - zellij
+    - lazygit
 
     # Files and search
     - bottom
