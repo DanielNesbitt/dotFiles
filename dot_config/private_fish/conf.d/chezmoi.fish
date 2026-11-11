@@ -23,7 +23,7 @@ function czup --description "Pull and apply chezmoi updates"
 end
 
 function czpkg --description "Edit chezmoi packages file"
-    vim ~/.local/share/chezmoi/.chezmoidata/packages.yaml
+    helix ~/.local/share/chezmoi/.chezmoidata/packages.yaml
 end
 
 function czcd --description "Change to the chezmoi directory"
