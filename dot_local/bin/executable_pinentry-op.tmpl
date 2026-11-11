@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# Minimal Assuan pinentry that answers GETPIN from 1Password.
+# Set OP_GPG_REF to the op:// reference of the GPG passphrase.
+
+OP_GPG_REF="${OP_GPG_REF:-{{ dig "machines" .chezmoi.hostname "gpg_passphrase_ref" "" . }}}"
+OP_BIN="${OP_BIN:-$HOME/.local/bin/op}"
+
+urlencode() {
+  local s=$1 out="" c i
+  for ((i = 0; i < ${#s}; i++)); do
+    c=${s:i:1}
+    case $c in
+      %) out+="%25" ;;
+      $'\r') out+="%0D" ;;
+      $'\n') out+="%0A" ;;
+      *) out+="$c" ;;
+    esac
+  done
+  printf '%s' "$out"
+}
+
+echo "OK Pleased to meet you"
+
+while IFS= read -r line; do
+  cmd=${line%% *}
+  case $cmd in
+    GETPIN)
+      if pass=$("$OP_BIN" read "$OP_GPG_REF" 2>/dev/null) && [[ -n $pass ]]; then
+        printf 'D %s\n' "$(urlencode "$pass")"
+        echo "OK"
+      else
+        echo "ERR 83886179 1Password lookup failed"
+      fi
+      ;;
+    BYE)
+      echo "OK closing connection"
+      exit 0
+      ;;
+    *)
+      echo "OK"
+      ;;
+  esac
+done

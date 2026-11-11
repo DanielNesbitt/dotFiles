@@ -6,3 +6,10 @@ CLAUDE.md
 .gnupg
 .config/fish/conf.d/gpg.fish
 {{ end -}}
+{{ if ne .chezmoi.os "darwin" -}}
+.local/bin/warp-kill
+.local/bin/warp-start
+{{ end -}}
+{{ if not (dig "machines" .chezmoi.hostname "gpg_passphrase_ref" "" .) -}}
+.local/bin/pinentry-op
+{{ end -}}
