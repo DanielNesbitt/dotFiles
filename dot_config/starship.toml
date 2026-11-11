@@ -1,38 +1,42 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
+# bobthefish-style prompt drawn with the terminal's own ANSI palette: path on
+# bright-black, git branch/status highlighted in green.
 format = """
-[](bright-black)\
 $directory\
-[](bright-black bg:green)\
-$git_branch\
-$git_status\
-[](green)\
-"""
+${custom.dir_end}\
+($git_branch$git_status[\ue0b0](fg:green)) """
 
 right_format = """
 $status$cmd_duration$time"""
 
+# fish-style abbreviation (~/.l/s/chezmoi) only applies to the components
+# that truncation_length cuts off, and is disabled entirely if
+# [directory.substitutions] is set.
 [directory]
 style = "bg:bright-black fg:bright-white"
-format = "[ $path ]($style)"
+read_only = " \uf023"
+read_only_style = "bg:bright-black fg:red"
+format = "[ $path]($style)[$read_only]($read_only_style)[ ]($style)"
 fish_style_pwd_dir_length = 1
+truncation_length = 1
+truncation_symbol = ""
 truncate_to_repo = false
-truncation_length = 99
 
-[directory.substitutions]
-"Documents" = "󰈙 "
-"Downloads" = " "
-"Music" = " "
-"Pictures" = " "
+# Close the path segment when there's no git segment after it.
+[custom.dir_end]
+when = "! git rev-parse --git-dir >/dev/null 2>&1"
+shell = ["sh"]
+format = "[\ue0b0](fg:bright-black)"
 
 [git_branch]
-symbol = ""
+symbol = "\ue0a0"
 style = "bold bg:green fg:black"
-format = "[ $symbol $branch ]($style)"
+format = "[\ue0b0](fg:bright-black bg:green)[ $symbol $branch ]($style)"
 
 [git_status]
 style = "bold bg:green fg:black"
-format = "[ $all_status$ahead_behind ]($style)"
+format = "([$all_status$ahead_behind ]($style))"
 
 [status]
 disabled = false
