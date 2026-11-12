@@ -19,6 +19,13 @@ packages:
     - rsync
     - ffmpeg
     - gh
+    - zoxide
+    - lazygit
+    - fd
+    - neovim
+    - direnv
+    - gitleaks
+    - bottom
   pacman:
     # Base system
     - base-devel
