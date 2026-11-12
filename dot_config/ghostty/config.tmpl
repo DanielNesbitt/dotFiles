@@ -1,0 +1,12 @@
+# ~/.config/ghostty/config
+
+shell-integration = fish
+command = /opt/homebrew/bin/fish -l
+font-family = JetBrainsMono Nerd Font
+font-style = SemiBold
+font-size = 14
+{{- $profile := dig "profile" "" . }}
+{{- $active := dig "profiles" $profile "terminal_theme" .terminal.theme . }}
+theme = {{ (index .terminal.themes $active).name }}
+
+keybind = global:cmd+backquote=toggle_quick_terminal

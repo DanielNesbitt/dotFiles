@@ -1,0 +1,49 @@
+{{- if contains "microsoft" (lower (dig "kernel" "osrelease" "" .chezmoi)) -}}
+#!/bin/bash
+# Upserts .chezmoidata/terminal-themes.yaml into every Windows Terminal
+# settings.json (stable and Preview) and points this distro's profile at the
+# active theme. WT owns the rest of the file, so it is patched, not managed.
+# Re-runs whenever the theme data below changes.
+{{- $profile := dig "profile" "" . }}
+{{- $active := dig "profiles" $profile "terminal_theme" .terminal.theme . }}
+{{- if not (hasKey .terminal.themes $active) }}
+{{-   fail (printf "terminal theme %q not in .terminal.themes" $active) }}
+{{- end }}
+set -euo pipefail
+
+themes=$(cat <<'JSON'
+{{ .terminal.themes | values | toJson }}
+JSON
+)
+active={{ (index .terminal.themes $active).name | quote }}
+distro="${WSL_DISTRO_NAME:-}"
+
+localappdata=$(wslpath "$(cmd.exe /c 'echo %LOCALAPPDATA%' 2>/dev/null | tr -d '\r')")
+
+shopt -s nullglob
+for settings in "$localappdata"/Packages/Microsoft.WindowsTerminal*_8wekyb3d8bbwe/LocalState/settings.json; do
+    tmp=$(mktemp "$(dirname "$settings")/settings.json.XXXXXX")
+    # Fails (and leaves the file untouched) on JSONC comments.
+    if ! jq --argjson themes "$themes" --arg active "$active" --arg distro "$distro" '
+        ($themes | map(del(.cursorText, .selectionForeground))) as $new
+        | ($new | map(.name)) as $names
+        | .schemes = ([(.schemes // [])[] | select(.name as $n | $names | index($n) | not)] + $new)
+        | if $distro == "" then . else
+            .profiles.list |= map(
+              if .source == "Microsoft.WSL" and .name == $distro
+              then .colorScheme = $active else . end)
+          end
+    ' "$settings" > "$tmp"; then
+        rm -f "$tmp"
+        echo "windows-terminal-themes: could not parse $settings; skipped" >&2
+        continue
+    fi
+    if cmp -s "$tmp" "$settings"; then
+        rm -f "$tmp"
+    else
+        cp "$settings" "$settings.bak"
+        mv "$tmp" "$settings"
+        echo "windows-terminal-themes: updated $settings"
+    fi
+done
+{{ end -}}

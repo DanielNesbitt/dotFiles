@@ -1,0 +1,34 @@
+# Terminal color themes, rendered into Ghostty (dot_config/ghostty/themes/)
+# and Windows Terminal (run_onchange_windows-terminal-themes.sh.tmpl).
+# Keys use Windows Terminal's spelling; the Ghostty partial
+# (.chezmoitemplates/ghostty-theme) maps them to palette indices 0-15.
+# `name` is the Ghostty theme filename and the WT scheme name.
+# A profile can pick a different active theme with `terminal_theme` in
+# profiles.yaml.
+terminal:
+  theme: cyberpunk
+  themes:
+    cyberpunk:
+      name: Cyberpunk
+      background: "#332a57"
+      foreground: "#e5e5e5"
+      cursorColor: "#21f6bc"
+      cursorText: "#999999"            # Ghostty only
+      selectionBackground: "#c1deff"
+      selectionForeground: "#000000"   # Ghostty only
+      black: "#000000"
+      red: "#ff7092"
+      green: "#00fbac"
+      yellow: "#fffa6a"
+      blue: "#00bfff"
+      purple: "#df95ff"
+      cyan: "#86cbfe"
+      white: "#ffffff"
+      brightBlack: "#595959"
+      brightRed: "#ff8aa4"
+      brightGreen: "#21f6bc"
+      brightYellow: "#fff787"
+      brightBlue: "#1bccfd"
+      brightPurple: "#e6aefe"
+      brightCyan: "#99d6fc"
+      brightWhite: "#ffffff"

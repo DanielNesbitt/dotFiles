@@ -26,6 +26,17 @@ Personal chezmoi dotfiles source state, applied to WSL/Arch Linux and macOS.
 
   Each target has exactly one writer; don't have the script write the fish
   snippet too, or the two will overwrite each other.
+- `.chezmoidata/terminal-themes.yaml` — terminal color themes plus the
+  active one (`terminal.theme`, overridable per profile via
+  `terminal_theme`). Rendered into:
+  - `dot_config/ghostty/themes/<Name>.tmpl` — one stub per theme calling
+    `.chezmoitemplates/ghostty-theme` (macOS only).
+  - `run_onchange_windows-terminal-themes.sh.tmpl` — on WSL, upserts the
+    schemes into every Windows Terminal `settings.json` (stable and
+    Preview) with `jq` and sets this distro's profile `colorScheme`. WT
+    owns the rest of that file, so it is patched, never managed.
+
+  To add a theme, add an entry to the YAML and a matching Ghostty stub.
 
 ## .chezmoiignore
 
