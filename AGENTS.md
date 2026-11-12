@@ -35,8 +35,12 @@ Personal chezmoi dotfiles source state, applied to WSL/Arch Linux and macOS.
     schemes into every Windows Terminal `settings.json` (stable and
     Preview) with `jq` and sets this distro's profile `colorScheme`. WT
     owns the rest of that file, so it is patched, never managed.
+  - `dot_config/opencode/themes/<Name>.json.tmpl` — one stub per theme
+    calling `.chezmoitemplates/opencode-theme`. OpenCode takes the theme
+    name from the filename, so the stub name must match `name`.
 
-  To add a theme, add an entry to the YAML and a matching Ghostty stub.
+  To add a theme, add an entry to the YAML, a matching Ghostty stub, and
+  a matching OpenCode stub.
 
 ## .chezmoiignore
 

@@ -1,8 +1,10 @@
-# Terminal color themes, rendered into Ghostty (dot_config/ghostty/themes/)
-# and Windows Terminal (run_onchange_windows-terminal-themes.sh.tmpl).
+# Terminal color themes, rendered into Ghostty (dot_config/ghostty/themes/),
+# Windows Terminal (run_onchange_windows-terminal-themes.sh.tmpl), and
+# OpenCode (dot_config/opencode/themes/, via .chezmoitemplates/opencode-theme).
 # Keys use Windows Terminal's spelling; the Ghostty partial
 # (.chezmoitemplates/ghostty-theme) maps them to palette indices 0-15.
-# `name` is the Ghostty theme filename and the WT scheme name.
+# `name` is the Ghostty theme filename, the WT scheme name, and the
+# OpenCode theme name.
 # A profile can pick a different active theme with `terminal_theme` in
 # profiles.yaml.
 terminal:
