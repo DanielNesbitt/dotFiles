@@ -5,6 +5,7 @@ CLAUDE.md
 {{ if eq .chezmoi.os "darwin" -}}
 .gnupg
 .config/fish/conf.d/gpg.fish
+.local/bin/hx
 {{ end -}}
 {{ if ne .chezmoi.os "darwin" -}}
 .config/ghostty
